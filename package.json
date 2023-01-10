@@ -16,7 +16,6 @@
     "dotenv": "^16.0.3",
     "looker-action-hub": "looker/actions",
     "moment": "^2.29.4",
-    "nodemon": "^1.19.4",
     "ssh2-sftp-client": "^9.0.4",
     "ts-node": "^6.0.5",
     "typescript": "^3.0.1"
