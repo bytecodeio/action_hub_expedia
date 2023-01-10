@@ -30,6 +30,28 @@ export class SFTPActionKey extends Hub.Action {
 
       let client: any
 
+      let sshKey=await fs.readFile(Path.resolve('./keys/id_ed25519'),'utf-8')
+
+      let conf={host: "134.122.114.119",
+      username: "root",
+      privateKey: sshKey,
+      passphrase: 'test',
+      debug: console.log}
+
+      let sftp = new Client()
+
+      try {
+        await sftp.connect(conf)
+        let d = await sftp.list('/')
+        console.log(d)
+        console.log('HAPPENED')
+    } catch (e) {
+      console.log('-------FAILED----------')
+      console.error(e)
+    } finally {
+      await sftp.end();
+    }
+
       try {
         client = await this.sftpClientFromRequest(request)
       } catch (e) {
@@ -115,21 +137,13 @@ export class SFTPActionKey extends Hub.Action {
 
     const client = new Client()
     const parsedUrl = new URL(request.formParams.address!)
-/* Example of raw string used 
-    let sshKey= `-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABAgAxTcXo
-d8nOL+8McMbQMhAAAAEAAAAAEAAAIXAAAAB3NzaC1yc2EAAAADAQABAAACAQCasp5Yg+o5
-kBkFJ1bsJJ4vINFcrHfI9VEg+UGxo+I+wLLPLnSykxJLbDQ0Q0SsK5joRGi6n2vBwuR/ho
-REST OF KEY
------END OPENSSH PRIVATE KEY-----`
-*/
     let sshKey=""
     if (request.formParams.key){
       sshKey=request.formParams.key
     }
     else {
       try {
-      sshKey = await fs.readFile(Path.resolve('./keys/test_sftp'),'utf-8')
+      sshKey = await fs.readFile(Path.resolve('./keys/id_ed25519'),'utf-8')
       } catch (e){
         throw e
       }
@@ -141,17 +155,19 @@ REST OF KEY
     }
     try {
       await client.connect({
-        host: parsedUrl.hostname,
-        username: request.formParams.username,
+        host: "134.122.114.119",
+        username: "root",
         privateKey: sshKey,
-        passphrase: 'hello',
-        port: +(parsedUrl.port ? parsedUrl.port : 22),
+        passphrase: 'test',
       })
     } catch (e) {
       throw e
     }
     return client
   }
+  
+
+  
 
 }
 
