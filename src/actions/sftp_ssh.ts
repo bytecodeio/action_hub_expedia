@@ -28,35 +28,10 @@ export class SFTPActionKey extends Hub.Action {
         return
       }
 
-      let client: any
-
-      let sshKey=await fs.readFile(Path.resolve('./keys/id_ed25519'),'utf-8')
-
-      let conf={host: "134.122.114.119",
-      username: "root",
-      privateKey: sshKey,
-      passphrase: 'test',
-      debug: console.log}
+      const conf=await this.sftpConfig(request)
 
       let sftp = new Client()
 
-      try {
-        await sftp.connect(conf)
-        let d = await sftp.list('/')
-        console.log(d)
-        console.log('HAPPENED')
-    } catch (e) {
-      console.log('-------FAILED----------')
-      console.error(e)
-    } finally {
-      await sftp.end();
-    }
-
-      try {
-        client = await this.sftpClientFromRequest(request)
-      } catch (e) {
-        console.error(e)
-      }
       const parsedUrl = new URL(request.formParams.address)
       if (!parsedUrl.pathname) {
         throw "Needs a valid SFTP address."
@@ -81,11 +56,24 @@ export class SFTPActionKey extends Hub.Action {
       else{
         remotePath = Path.join(parsedUrl.pathname, fileName)
       }
-      const filestat=await client.put(transformed, remotePath)
-        .then(() => resolve(new Hub.ActionResponse()))
-        .catch((err: any) => resolve(new Hub.ActionResponse({success: false, message: err.message})))
-      
-      console.info(filestat)
+
+      try {
+        await sftp.connect(conf)
+        let d = await sftp.list('/')
+        console.log(d)
+        console.log(transformed)
+        console.log(remotePath)
+        const response = await sftp.put(transformed, remotePath)
+        console.log(response)
+        resolve(new Hub.ActionResponse({}))
+        console.log('HAPPENED')
+      } catch (e) {
+        console.log('-------FAILED----------')
+        resolve(new Hub.ActionResponse({success: false}))
+        console.error(e)
+      } finally {
+        await sftp.end();
+      }
     })
   }
 
@@ -126,16 +114,17 @@ export class SFTPActionKey extends Hub.Action {
     {
       name: "key",
       type: "string"
+    },
+    {
+      name: "passphrase",
+      type: "string"
     }
   ]
     return form
   }
 
-  private async sftpClientFromRequest(request: Hub.ActionRequest) {
+  private async sftpConfig(request: Hub.ActionRequest) {
 
-    console.log(request)
-
-    const client = new Client()
     const parsedUrl = new URL(request.formParams.address!)
     let sshKey=""
     if (request.formParams.key){
@@ -148,27 +137,21 @@ export class SFTPActionKey extends Hub.Action {
         throw e
       }
     }
-    console.log("KEY1",sshKey)
 
     if (!parsedUrl.hostname) {
       throw "Needs a valid SFTP address."
     }
-    try {
-      await client.connect({
-        host: "134.122.114.119",
-        username: "root",
-        privateKey: sshKey,
-        passphrase: 'test',
-      })
-    } catch (e) {
-      throw e
+//host: parsedUrl.hostname,
+    const config = {
+      host: parsedUrl.hostname,
+      username: request.formParams.username,
+      privateKey: sshKey,
+      passphrase: 'test',
+      port: +(parsedUrl.port ? parsedUrl.port : 22)
     }
-    return client
+
+    return config
   }
-  
-
-  
-
-}
+  }
 
 Hub.addAction(new SFTPActionKey())
