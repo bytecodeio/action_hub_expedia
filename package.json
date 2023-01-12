@@ -17,10 +17,11 @@
     "looker-action-hub": "looker/actions",
     "moment": "^2.29.4",
     "ssh2-sftp-client": "^9.0.4",
+    "ssh2":"^1.11.0",
     "ts-node": "^6.0.5",
     "typescript": "^3.0.1"
   },
   "engines": {
-    "node": "14.18.0"
+    "node": "^14.x"
   }
 }
