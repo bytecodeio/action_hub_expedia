@@ -158,16 +158,18 @@ export class SFTPActionKey extends Hub.Action {
     }
 
     console.log(sshKey)
-    /*
+    
     sshKey=`-----BEGIN OPENSSH PRIVATE KEY-----
-    b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBMGhcQZk
-    Zt+PNgyFLxxixNAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIF6xH2f6D4QhC3mM
-    z5xsodNAUdsnuMAmriOYVjCxhMxfAAAAwB+NFg4vs9EA8C3l1QtrT9MVkAkVVY03u22f/i
-    8yOGu640SWcPHNs0v5sMv8w8m3uxyvnjBYLiAyY3Zunnh9XhbDKOvBQC84cDhEq+fOxsJF
-    jVGIkoJXEROMVyvQyCWC6V1Q9c+GC8AjP4UXyLezplDmXIavSAvzJ7JEhO4yfGEpILVEHb
-    i73NjshJeESuwrDbfiRXSoMRmb+RkczO1lLRcCdF4asGU8dpOsFRYUbLf8vxnBIUf3x67p
-    YzS76uietQ==
-    -----END OPENSSH PRIVATE KEY-----`/*/
+b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBMGhcQZk
+Zt+PNgyFLxxixNAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIF6xH2f6D4QhC3mM
+z5xsodNAUdsnuMAmriOYVjCxhMxfAAAAwB+NFg4vs9EA8C3l1QtrT9MVkAkVVY03u22f/i
+8yOGu640SWcPHNs0v5sMv8w8m3uxyvnjBYLiAyY3Zunnh9XhbDKOvBQC84cDhEq+fOxsJF
+jVGIkoJXEROMVyvQyCWC6V1Q9c+GC8AjP4UXyLezplDmXIavSAvzJ7JEhO4yfGEpILVEHb
+i73NjshJeESuwrDbfiRXSoMRmb+RkczO1lLRcCdF4asGU8dpOsFRYUbLf8vxnBIUf3x67p
+YzS76uietQ==
+-----END OPENSSH PRIVATE KEY-----`
+
+    console.log(sshKey)
 
     if (!parsedUrl.hostname) {
       throw "Needs a valid SFTP address."
