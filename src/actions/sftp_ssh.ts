@@ -108,7 +108,7 @@ export class SFTPActionKey extends Hub.Action {
       {
         label: "SSH Key",
         name: "key",
-        type: "string",
+        type: "textarea",
       },
       {
         label: "SSH Key Passphrase",
