@@ -156,6 +156,8 @@ export class SFTPActionKey extends Hub.Action {
         throw e
       }
     }
+
+    console.log(sshKey)
     /*
     sshKey=`-----BEGIN OPENSSH PRIVATE KEY-----
     b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBMGhcQZk
