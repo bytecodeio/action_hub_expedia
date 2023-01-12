@@ -59,16 +59,10 @@ export class SFTPActionKey extends Hub.Action {
 
       try {
         await sftp.connect(conf)
-        let d = await sftp.list('/')
-        console.log(d)
-        console.log(transformed)
-        console.log(remotePath)
         const response = await sftp.put(transformed, remotePath)
-        console.log(response)
+        console.info(response)
         resolve(new Hub.ActionResponse({}))
-        console.log('HAPPENED')
       } catch (e) {
-        console.log('-------FAILED----------')
         resolve(new Hub.ActionResponse({success: false}))
         console.error(e)
       } finally {
@@ -147,7 +141,7 @@ export class SFTPActionKey extends Hub.Action {
     let sshKey=""
     if (request.formParams.key){
       sshKey=request.formParams.key
-      console.log(sshKey)
+      console.log('Form Key',sshKey)
     }
     else {
       try {
@@ -158,18 +152,6 @@ export class SFTPActionKey extends Hub.Action {
     }
 
     console.log(sshKey)
-    
-    sshKey=`-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBMGhcQZk
-Zt+PNgyFLxxixNAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIF6xH2f6D4QhC3mM
-z5xsodNAUdsnuMAmriOYVjCxhMxfAAAAwB+NFg4vs9EA8C3l1QtrT9MVkAkVVY03u22f/i
-8yOGu640SWcPHNs0v5sMv8w8m3uxyvnjBYLiAyY3Zunnh9XhbDKOvBQC84cDhEq+fOxsJF
-jVGIkoJXEROMVyvQyCWC6V1Q9c+GC8AjP4UXyLezplDmXIavSAvzJ7JEhO4yfGEpILVEHb
-i73NjshJeESuwrDbfiRXSoMRmb+RkczO1lLRcCdF4asGU8dpOsFRYUbLf8vxnBIUf3x67p
-YzS76uietQ==
------END OPENSSH PRIVATE KEY-----`
-
-    console.log(sshKey)
 
     if (!parsedUrl.hostname) {
       throw "Needs a valid SFTP address."
@@ -178,7 +160,7 @@ YzS76uietQ==
       host: parsedUrl.hostname,
       username: request.formParams.username,
       privateKey: sshKey,
-      passphrase: 'test',
+      passphrase: request.formParams.passphrase,
       port: +(parsedUrl.port ? parsedUrl.port : 22)
     }
 
