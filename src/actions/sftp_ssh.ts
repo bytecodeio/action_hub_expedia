@@ -110,16 +110,34 @@ export class SFTPActionKey extends Hub.Action {
         name: 'yyyymmdd',
         label: "YYYY-MM-DD"
       }]
-    },
-    {
-      name: "key",
-      type: "string"
-    },
-    {
-      name: "passphrase",
-      type: "string"
-    }
-  ]
+      },
+      {
+        label: "SSH Key",
+        name: "key",
+        type: "string",
+      },
+      {
+        label: "SSH Key Passphrase",
+        name: "passphrase",
+        type: "string",
+        default: "test"
+      },
+      {
+        label: "File Encryption",
+        name: "encrypt",
+        type: "select",
+        options: [
+          {
+            name: "yes",
+            label: "Yes"
+          },
+          {
+            name: "no",
+            label: "No"
+          }
+        ]
+      }
+    ]
     return form
   }
 
@@ -129,19 +147,29 @@ export class SFTPActionKey extends Hub.Action {
     let sshKey=""
     if (request.formParams.key){
       sshKey=request.formParams.key
+      console.log(sshKey)
     }
     else {
       try {
-      sshKey = await fs.readFile(Path.resolve('./keys/id_ed25519'),'utf-8')
+      sshKey = await fs.readFile(Path.resolve('./id_ed25519'),'utf-8')
       } catch (e){
         throw e
       }
     }
+    /*
+    sshKey=`-----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABBMGhcQZk
+    Zt+PNgyFLxxixNAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIF6xH2f6D4QhC3mM
+    z5xsodNAUdsnuMAmriOYVjCxhMxfAAAAwB+NFg4vs9EA8C3l1QtrT9MVkAkVVY03u22f/i
+    8yOGu640SWcPHNs0v5sMv8w8m3uxyvnjBYLiAyY3Zunnh9XhbDKOvBQC84cDhEq+fOxsJF
+    jVGIkoJXEROMVyvQyCWC6V1Q9c+GC8AjP4UXyLezplDmXIavSAvzJ7JEhO4yfGEpILVEHb
+    i73NjshJeESuwrDbfiRXSoMRmb+RkczO1lLRcCdF4asGU8dpOsFRYUbLf8vxnBIUf3x67p
+    YzS76uietQ==
+    -----END OPENSSH PRIVATE KEY-----`/*/
 
     if (!parsedUrl.hostname) {
       throw "Needs a valid SFTP address."
     }
-//host: parsedUrl.hostname,
     const config = {
       host: parsedUrl.hostname,
       username: request.formParams.username,
