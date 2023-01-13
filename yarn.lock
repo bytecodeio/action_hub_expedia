@@ -246,6 +246,11 @@
     lodash "^4.17.19"
     request "^2.88.0"
 
+"@openpgp/web-stream-tools@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@openpgp/web-stream-tools/-/web-stream-tools-0.0.13.tgz#f0be50120c152efb11b65df29ab482dc192dbbd7"
+  integrity sha512-VQ0O0lUcD9ilLcMLQMJMgPhp8fDgMd4copd+UhSBGjud0vbI1ONQ3ffAhixEMml/AApLJtqCpd7PJcccPliFSA==
+
 "@panva/asn1.js@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
@@ -429,6 +434,13 @@
   resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.38.tgz#7a671e66750ccd21c9fc9d264d0e1e5330bc9908"
   integrity sha512-yR/Kxc0dd4FfwtEoLZMoqJbM/VE/W7hXn/MIjb+axcwag0iFmSPK7OBUZq1YWLynJUoWQkfUrI7T0HDqGApNSg==
 
+"@types/bn.js@*":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.1.tgz#b51e1b55920a4ca26e9285ff79936bbdec910682"
+  integrity sha512-qNrYbZqMx0uJAfKnKclPh+dTwK33KfLHYqtyODwd5HnXOjnkhc4qgn3BrK6RWyGZm5+sIFE7Q7Vz6QQtJB7w7g==
+  dependencies:
+    "@types/node" "*"
+
 "@types/body-parser@*", "@types/body-parser@^1.19.0":
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
@@ -544,6 +556,13 @@
   integrity sha512-Ytg7xGrqNpnWvzK9G2k+ZzTYiG+h+FGxQ5uDR/YBmBYv8P6HkpRwHjwH+Vcuesv6anZnB3AeqX2Wm/CP+e8JFA==
   dependencies:
     "@types/node" "*"
+
+"@types/openpgp@^4.4.18":
+  version "4.4.18"
+  resolved "https://registry.yarnpkg.com/@types/openpgp/-/openpgp-4.4.18.tgz#b523e7a97646069756a01faf0569e198fe4d0dc1"
+  integrity sha512-8PGX6byEni97ZRRp2fVguSk4hbw4e+0vd8XHmyUt0+PjRoMcOZHsn+StQQjfo/wA/3kf/KCbV6I4pwmSC5/LKg==
+  dependencies:
+    "@types/bn.js" "*"
 
 "@types/p-queue@^2.3.2":
   version "2.3.2"
@@ -839,6 +858,16 @@ asap@*, asap@^2.0.0, asap@~2.0.3:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
+asn1.js@^5.0.0:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
+  integrity sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==
+  dependencies:
+    bn.js "^4.0.0"
+    inherits "^2.0.1"
+    minimalistic-assert "^1.0.0"
+    safer-buffer "^2.1.0"
+
 asn1@^0.2.4, asn1@~0.2.0, asn1@~0.2.3:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/asn1/-/asn1-0.2.6.tgz#0d3a7bb6e64e02a90c0303b31f292868ea09a08d"
@@ -1064,6 +1093,11 @@ bluebird@^3.5.0, bluebird@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
+
+bn.js@^4.0.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
+  integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
 body-parser@1.20.1, body-parser@^1.19.0:
   version "1.20.1"
@@ -3535,6 +3569,11 @@ mimer@^0.3.2:
   resolved "https://registry.yarnpkg.com/mimer/-/mimer-0.3.2.tgz#0b83aabdf48eaacfd2e093ed4c0ed3d38eda8073"
   integrity sha512-N6NcgDQAevhP/02DQ/epK6daLy4NKrIHyTlJcO6qBiYn98q+Y4a/knNsAATCe1xLS2F0nEmJp+QYli2s8vKwyQ==
 
+minimalistic-assert@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
+  integrity sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==
+
 "minimatch@2 || 3", minimatch@^3.0.4:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
@@ -3807,6 +3846,13 @@ one-time@^1.0.0:
   integrity sha512-5DXOiRKwuSEcQ/l0kGCF6Q3jcADFv5tSmRaJck/OqkVFcOzutB134KRSfF0xDrL39MNnqxbHBbUUcjZIhTgb2g==
   dependencies:
     fn.name "1.x.x"
+
+openpgp@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.5.0.tgz#235ae5a49d5fda5cfd1d82c4c42cd91433478c14"
+  integrity sha512-SpwcJnxrK9Y0HRM6KxSFqkAEOSWEabCH/c8dII/+y2e5f6KvuDG5ZE7JXaPBaVJNE4VUZZeTphxXDoZD0KOHrw==
+  dependencies:
+    asn1.js "^5.0.0"
 
 opn@^5.3.0:
   version "5.5.0"

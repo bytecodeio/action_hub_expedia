@@ -2,9 +2,10 @@ import * as Hub from "looker-action-hub/lib/hub"
 import {promises as fs} from 'fs'
 import * as Path from "path"
 import * as Client from "ssh2-sftp-client"
+import * as openpgp from 'openpgp'
 import * as moment from 'moment'
 import { URL } from "url"
-
+import { Readable } from 'stream'
 
 export class SFTPActionKey extends Hub.Action {
 
@@ -13,6 +14,7 @@ export class SFTPActionKey extends Hub.Action {
   iconName = "sftp/sftp.png"
   description = "Send data files to an SFTP server with a Key."
   supportedActionTypes = [Hub.ActionType.Query]
+  supportedDownloadSettings= ['csv']
   params = []
 
   async execute(request: Hub.ActionRequest) {
@@ -38,8 +40,30 @@ export class SFTPActionKey extends Hub.Action {
       }
       const data = request.attachment.dataBuffer
       const fileName = request.formParams.filename || request.suggestedFilename()
-    
+      
       const transformed = data.slice(data.indexOf('\n')+1)
+      let transformedStream = Readable.from(transformed)
+      let output = new Readable
+
+      if (request.formParams.encrypt==="yes"){
+        if(request.formParams.pgp_key){
+          const test_pgp=`-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEY8Fn0hYJKwYBBAHaRw8BAQdAuJRHEsc3/G+5tCRQg0zO8K0n3tUjAB2R
+sM9OYQVgqWXNHFRlc3QgVXNlciA8dGVzdEBleGFtcGxlLmNvbT7CjAQQFgoA
+PgUCY8Fn0gQLCQcICRBVemOneBFEwwMVCAoEFgACAQIZAQIbAwIeARYhBAan
+WevHvAOGhnEgn1V6Y6d4EUTDAABuowD/SbVA+sehktiBRM2tlM1fP4FJo4d6
+cpEKYj76S0+QqdcA/01loxMA/8XkRsZ5Wc0/KkGzQ1YkNF7ucrMxPvRNRf4G
+zjgEY8Fn0hIKKwYBBAGXVQEFAQEHQLzI/krK80hq2YVOWwTWDan7u1YllCNF
+GFHe8sR0ScU5AwEIB8J4BBgWCAAqBQJjwWfSCRBVemOneBFEwwIbDBYhBAan
+WevHvAOGhnEgn1V6Y6d4EUTDAACLQgEAjhGpdRpe3VP2jpLPvsVua/KPzgW0
+dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
+=gx/k
+-----END PGP PUBLIC KEY BLOCK-----`
+          output=await this.pgpEncrypt(transformedStream, test_pgp)
+          console.log(output)
+        }
+      }
 
       let remotePath=""
       if (request.formParams.prefixfile) {
@@ -59,7 +83,7 @@ export class SFTPActionKey extends Hub.Action {
 
       try {
         await sftp.connect(conf)
-        const response = await sftp.put(transformed, remotePath)
+        const response = await sftp.put(request.formParams.encrypt==="yes"? output :transformedStream, remotePath)
         console.info(response)
         resolve(new Hub.ActionResponse({}))
       } catch (e) {
@@ -130,6 +154,11 @@ export class SFTPActionKey extends Hub.Action {
             label: "No"
           }
         ]
+      },
+      {
+        label: "PGP Public Key",
+        name: "pgp_key",
+        type: "textarea"
       }
     ]
     return form
@@ -166,6 +195,17 @@ export class SFTPActionKey extends Hub.Action {
 
     return config
   }
+
+  private async pgpEncrypt(fileStr: openpgp.NodeStream<any>, encryptionKey:string) {
+  const publicKey = await openpgp.readKey({ armoredKey: encryptionKey });
+  const encrypted : openpgp.NodeStream<string>= await openpgp.encrypt({
+    message: await openpgp.createMessage({ binary: fileStr}), // input as Message object
+    encryptionKeys: publicKey
+  })
+
+  return encrypted as Readable
+  }
+
   }
 
 Hub.addAction(new SFTPActionKey())
