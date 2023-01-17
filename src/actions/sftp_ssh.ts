@@ -44,27 +44,29 @@ export class SFTPActionKey extends Hub.Action {
       const transformed = data.slice(data.indexOf('\n')+1)
       let transformedStream = Readable.from(transformed)
       let output = new Readable
-
+      let valid_request = true
       if (request.formParams.encrypt==="yes"){
         if(request.formParams.pgp_key){
-          const test_pgp=`-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-xjMEY8Fn0hYJKwYBBAHaRw8BAQdAuJRHEsc3/G+5tCRQg0zO8K0n3tUjAB2R
-sM9OYQVgqWXNHFRlc3QgVXNlciA8dGVzdEBleGFtcGxlLmNvbT7CjAQQFgoA
-PgUCY8Fn0gQLCQcICRBVemOneBFEwwMVCAoEFgACAQIZAQIbAwIeARYhBAan
-WevHvAOGhnEgn1V6Y6d4EUTDAABuowD/SbVA+sehktiBRM2tlM1fP4FJo4d6
-cpEKYj76S0+QqdcA/01loxMA/8XkRsZ5Wc0/KkGzQ1YkNF7ucrMxPvRNRf4G
-zjgEY8Fn0hIKKwYBBAGXVQEFAQEHQLzI/krK80hq2YVOWwTWDan7u1YllCNF
-GFHe8sR0ScU5AwEIB8J4BBgWCAAqBQJjwWfSCRBVemOneBFEwwIbDBYhBAan
-WevHvAOGhnEgn1V6Y6d4EUTDAACLQgEAjhGpdRpe3VP2jpLPvsVua/KPzgW0
-dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
-=gx/k
------END PGP PUBLIC KEY BLOCK-----`
+          const test_pgp=request.formParams.pgp_key
+          try{
           output=await this.pgpEncrypt(transformedStream, test_pgp)
-          console.log(output)
+          } catch (e){
+            let errorMessage=""
+            if (typeof e === "string") {
+              errorMessage=e
+              } else if (e instanceof Error) {
+                errorMessage=e.message
+              }
+            output.push(null)
+            resolve(new Hub.ActionResponse({success: false, message:errorMessage}))
+            valid_request=false
+          }
+        }
+        else {
+          resolve(new Hub.ActionResponse({ success:false, message:"PGP Key not provided"}))
+          valid_request=false
         }
       }
-
       let remotePath=""
       if (request.formParams.prefixfile) {
         let prefix=""
@@ -72,9 +74,9 @@ dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
         try {
           prefix = moment(today).format(request.formParams.prefixfile)
         } catch{
-          console.warn('Unusuable Format Submitted')
+          console.warn('Unusuable Date Format Submitted')
+          resolve(new Hub.ActionResponse({success: false, message:"Unusuable Date Format Submitted"}))
         }
-
         remotePath = Path.join(parsedUrl.pathname, prefix+"_"+fileName)
       }
       else{
@@ -82,13 +84,20 @@ dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
       }
 
       try {
+        if (valid_request){
         await sftp.connect(conf)
-        const response = await sftp.put(request.formParams.encrypt==="yes"? output :transformedStream, remotePath)
+        const response = await sftp.put(request.formParams.encrypt==="yes"? output : transformedStream, remotePath)
         console.info(response)
-        resolve(new Hub.ActionResponse({}))
+        resolve(new Hub.ActionResponse({}))}
       } catch (e) {
-        resolve(new Hub.ActionResponse({success: false}))
-        console.error(e)
+        let errorMessage=""
+        if (typeof e === "string") {
+          errorMessage=e
+          } else if (e instanceof Error) {
+            errorMessage=e.message
+          }
+        console.error(e)  
+        resolve(new Hub.ActionResponse({success: false, message:errorMessage}))
       } finally {
         await sftp.end();
       }
@@ -170,7 +179,6 @@ dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
     let sshKey=""
     if (request.formParams.key){
       sshKey=request.formParams.key
-      console.log('Form Key',sshKey)
     }
     else {
       try {
@@ -179,9 +187,6 @@ dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
         throw e
       }
     }
-
-    console.log(sshKey)
-
     if (!parsedUrl.hostname) {
       throw "Needs a valid SFTP address."
     }
@@ -197,13 +202,16 @@ dEYVfRVMxwdbkM8BAJLBQKOV4lJVpzCanCndMDqjtYKyZWajfX9RQORnFpcK
   }
 
   private async pgpEncrypt(fileStr: openpgp.NodeStream<any>, encryptionKey:string) {
+  try{
   const publicKey = await openpgp.readKey({ armoredKey: encryptionKey });
   const encrypted : openpgp.NodeStream<string>= await openpgp.encrypt({
     message: await openpgp.createMessage({ binary: fileStr}), // input as Message object
     encryptionKeys: publicKey
   })
-
-  return encrypted as Readable
+  return encrypted as Readable}
+  catch(e){
+    throw e
+  }
   }
 
   }
