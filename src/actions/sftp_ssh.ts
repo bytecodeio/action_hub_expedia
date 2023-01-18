@@ -10,14 +10,14 @@ import { Readable } from 'stream'
 export class SFTPActionKey extends Hub.Action {
 
   name = "sftp_sshkey"
-  label = "SFTP SSHKEY"
+  label = "SFTP SSH"
   iconName = "sftp/sftp.png"
   description = "Send data files to an SFTP server with a Key."
   supportedActionTypes = [Hub.ActionType.Query]
   supportedFormats= [Hub.ActionFormat.Csv]
   params = []
 
-  async execute(request: Hub.ActionRequest) {
+  async execute(request: Hub.ActionRequest): Promise<Hub.ActionResponse> {
     return new Promise<Hub.ActionResponse>(async (resolve, reject) => {
 
       if (!request.attachment || !request.attachment.dataBuffer) {
@@ -68,6 +68,7 @@ export class SFTPActionKey extends Hub.Action {
         }
       }
       let remotePath=""
+      let postfix = "".concat(".csv",valid_request ? ".pgp":"")
       if (request.formParams.prefixfile) {
         let prefix=""
         const today = new Date()
@@ -77,10 +78,10 @@ export class SFTPActionKey extends Hub.Action {
           console.warn('Unusuable Date Format Submitted')
           resolve(new Hub.ActionResponse({success: false, message:"Unusuable Date Format Submitted"}))
         }
-        remotePath = Path.join(parsedUrl.pathname, prefix+"_"+fileName)+valid_request? ".pgp" :""
+        remotePath = Path.join(parsedUrl.pathname, prefix+"_"+fileName+postfix)
       }
       else{
-        remotePath = Path.join(parsedUrl.pathname, fileName)+ valid_request? ".pgp" :""
+        remotePath = Path.join(parsedUrl.pathname, fileName+postfix)
       }
 
       try {
