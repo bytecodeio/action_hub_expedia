@@ -125,10 +125,7 @@ export class SFTPActionKey extends Hub.Action {
       label: "PrefixFile",
       name: "prefixfile",
       type: "select",
-      options: [{
-        name: "none",
-        label: "None"
-      },
+      options: [
       {
         name: "yymm",
         label: "YY-MM"
