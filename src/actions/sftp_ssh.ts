@@ -14,7 +14,7 @@ export class SFTPActionKey extends Hub.Action {
   iconName = "sftp/sftp.png"
   description = "Send data files to an SFTP server with a Key."
   supportedActionTypes = [Hub.ActionType.Query]
-  supportedDownloadSettings= ['csv']
+  supportedFormats= [Hub.ActionFormat.Csv]
   params = []
 
   async execute(request: Hub.ActionRequest) {
