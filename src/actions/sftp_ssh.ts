@@ -77,7 +77,7 @@ export class SFTPActionKey extends Hub.Action {
           console.warn('Unusuable Date Format Submitted')
           resolve(new Hub.ActionResponse({success: false, message:"Unusuable Date Format Submitted"}))
         }
-        remotePath = Path.join(parsedUrl.pathname, prefix+"_"+fileName)
+        remotePath = Path.join(parsedUrl.pathname, prefix+"_"+fileName, valid_request? ".pgp" :"")
       }
       else{
         remotePath = Path.join(parsedUrl.pathname, fileName)
