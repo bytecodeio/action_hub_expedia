@@ -1,0 +1,11 @@
+[Unit]
+After=network-online.target
+
+[Service]
+User=pi
+Environment=NODE_VERSION=14.8
+WorkingDirectory=/home/pi/Dev/test_looker
+ExecStart=./node_modules/.bin/ts-node --no-cache ./src/index.ts
+
+[Install]
+WantedBy=multi-user.target

@@ -68,7 +68,7 @@ export class SFTPActionKey extends Hub.Action {
         }
       }
       let remotePath=""
-      let postfix = "".concat(".csv",valid_request ? ".pgp":"")
+      let postfix = "".concat(".csv",(valid_request && request.formParams.encrypt=== "yes")? ".pgp":"")
       if (request.formParams.prefixfile) {
         let prefix=""
         const today = new Date()
@@ -128,13 +128,18 @@ export class SFTPActionKey extends Hub.Action {
       type: "select",
       options: [
       {
-        name: "yymm",
+        name: "YY-MM",
         label: "YY-MM"
       },
       {
-        name: 'yyyymmdd',
+        name: 'YYYY-MM-DD',
         label: "YYYY-MM-DD"
-      }]
+      },
+      {
+        name: 'YYYY-MM-DDTHH:mm',
+        label: "YYYY-MM-DDTHH:mm"
+      }
+    ]
       },
       {
         label: "SSH Key",
@@ -151,6 +156,7 @@ export class SFTPActionKey extends Hub.Action {
         label: "File Encryption",
         name: "encrypt",
         type: "select",
+        required: true,
         options: [
           {
             name: "yes",
